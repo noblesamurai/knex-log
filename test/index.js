@@ -5,7 +5,16 @@ const test = require('abstract-log');
 
 const common = {
   setup: async (t) => {
-    return knexLog();
+    return knexLog({
+      knex: {
+        client: 'sqlite3',
+        connection: {
+          filename: './mydb.sqlite'
+        }
+      },
+      tableName: 'logs',
+      _purgeLog: true
+    });
   },
   teardown: async (t, log) => {}
 };
