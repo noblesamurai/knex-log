@@ -1,12 +1,13 @@
-const chai = require('chai');
-const dirtyChai = require('dirty-chai');
-const expect = chai.expect;
+const tape = require('tape');
+const it = require('tape-promise').default(tape);
+const knexLog = require('..');
+const test = require('abstract-log');
 
-chai.use(dirtyChai);
+const common = {
+  setup: async (t) => {
+    return knexLog();
+  },
+  teardown: async (t, log) => {}
+};
 
-describe('my thing', function () {
-  it('should work', function () {
-    expect(true).to.be.true;
-    throw new Error('unimplemented');
-  });
-});
+test(it, common);
