@@ -21,7 +21,7 @@
     "url": "https://github.com/noblesamurai/knex-log/issues"
   },
   "engines": {
-    "node": "6.x",
+    "node": ">= 7.6",
     "npm": "3.x"
   },
   "dependencies": {
