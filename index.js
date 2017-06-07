@@ -1,7 +1,6 @@
 const Knex = require('knex');
 const stream = require('stream');
 
-
 // TODO(tim): Should send the timestamps through if they exist... i.e. created_at, updated_at
 
 module.exports = (config) => {
@@ -22,7 +21,10 @@ module.exports = (config) => {
   }
 
   async function append (payload) {
-    return knex(config.tableName).insert({ value: JSON.stringify(payload) }).returning('id').then((result) => result[0]);
+    return knex(config.tableName)
+      .insert({ value: JSON.stringify(payload) })
+      .returning('id')
+      .then((result) => result[0]);
   }
 
   async function get () {
@@ -32,29 +34,30 @@ module.exports = (config) => {
   function createWriteStream () {
     const ws = stream.Writable({ objectMode: true });
     ws._write = (payload, enc, cb) => {
-      return knex(config.tableName).insert({ value: JSON.stringify(payload) }).then(() => cb()).catch(cb);
+      return knex(config.tableName)
+        .insert({ value: JSON.stringify(payload) })
+        .then(() => cb())
+        .catch(cb);
     };
     return ws;
   }
 
   function createReadStream (opts = {}) {
+    const transform = new stream.Transform({
+      objectMode: true,
+      transform (chunk, encoding, cb) {
+        let value;
+        try {
+          value = JSON.parse(chunk.value);
+        } catch (e) {
+          return cb(e);
+        }
+        cb(null, { offset: chunk.id, value });
+      }
+    });
     return knex(config.tableName).select('id', 'value').where('id', '>=', opts.offset || 0)
       .stream()
-      .pipe(new stream.Transform({
-        objectMode: true,
-        transform (chunk, encoding, callback) {
-          let value;
-          try {
-            value = JSON.parse(chunk.value);
-          } catch (e) {
-            return callback(e);
-          }
-          callback(null, {
-            offset: chunk.id,
-            value
-          });
-        }
-      }));
+      .pipe(transform);
   }
 
   return {

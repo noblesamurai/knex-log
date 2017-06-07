@@ -10,5 +10,6 @@ env:
   # default settings for the test to run (sqlite) and still make an explit
   # build for that case.
   # https://github.com/tgriesser/knex/issues/2038
+  # https://docs.travis-ci.com/user/environment-variables/#Defining-Multiple-Variables-per-Item
   - TEST_DATABASE_URL=''
   - TEST_DATABASE_URL='postgres://localhost/travis_ci_test'
