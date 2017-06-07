@@ -8,7 +8,7 @@ module.exports = (config) => {
     open: async () => {
       return knex.schema.createTableIfNotExists(config.tableName, function (table) {
         table.increments();
-        table.json('value');
+        table.json('value'); //FIXME(tim): Use jsonb for PG
         table.timestamps(true, true);
       }).then(() => {
         if (config._purgeLog) return knex(config.tableName).delete();
@@ -32,6 +32,7 @@ module.exports = (config) => {
           transform (chunk, encoding, callback) {
             let value;
             try {
+              //FIXME(tim) What happens when using PG?
               value = JSON.parse(chunk.value);
             } catch (e) {
               return callback(e);
