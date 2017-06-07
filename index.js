@@ -7,7 +7,7 @@ module.exports = (config) => {
   async function open () {
     return knex.schema.createTableIfNotExists(config.tableName, function (table) {
       table.increments();
-      table.json('value'); // FIXME(tim): Use jsonb for PG
+      table.jsonb('value');
       table.timestamps(true, true);
     }).then(() => {
       if (config._purgeLog) return knex(config.tableName).delete();
