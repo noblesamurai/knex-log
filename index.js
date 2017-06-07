@@ -1,6 +1,9 @@
 const Knex = require('knex');
 const stream = require('stream');
 
+
+// TODO(tim): Should send the timestamps through if they exist... i.e. created_at, updated_at
+
 module.exports = (config) => {
   const knex = Knex(config.knex);
 
@@ -42,7 +45,6 @@ module.exports = (config) => {
         transform (chunk, encoding, callback) {
           let value;
           try {
-            // FIXME(tim) What happens when using PG?
             value = JSON.parse(chunk.value);
           } catch (e) {
             return callback(e);
