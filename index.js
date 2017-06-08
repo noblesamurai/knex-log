@@ -39,7 +39,9 @@ module.exports = (knex, config) => {
     return knex(config.tableName).first('id', columnName)
       .where({ id: offset.id })
       .then((obj) => {
-        return JSON.parse(obj[columnName]);
+        const value = obj[columnName];
+        if (typeof value === 'string') return JSON.parse(value);
+        return value;
       });
   }
 
@@ -61,7 +63,9 @@ module.exports = (knex, config) => {
       .where('id', '>=', (opts.offset && opts.offset.id) || 0)
       .stream()
       .pipe(streamMap({ objectMode: true }, (obj) => {
-        return { offset: { id: obj.id, timestamp: obj.created_at }, value: JSON.parse(obj[columnName]) };
+        let value = obj[columnName];
+        if (typeof value === 'string') value = JSON.parse(value);
+        return { offset: { id: obj.id, timestamp: obj.created_at }, value };
       }));
   }
 
