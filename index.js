@@ -2,8 +2,6 @@ const Knex = require('knex');
 const stream = require('stream');
 const streamMap = require('through2-map');
 
-// TODO(tim): Should send the timestamps through if they exist... i.e. created_at, updated_at
-
 module.exports = (config) => {
   const knex = Knex(config.knex);
 
