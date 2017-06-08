@@ -1,10 +1,7 @@
-const Knex = require('knex');
 const stream = require('stream');
 const streamMap = require('through2-map');
 
-module.exports = (config) => {
-  const knex = Knex(config.knex);
-
+module.exports = (knex, config) => {
   async function open () {
     return knex.schema.createTableIfNotExists(config.tableName, function (table) {
       table.increments();
@@ -16,7 +13,7 @@ module.exports = (config) => {
   }
 
   async function close () {
-    return knex.destroy();
+    return Promise.resolve();
   }
 
   async function append (payload) {
