@@ -2,10 +2,12 @@ const stream = require('stream');
 const streamMap = require('through2-map');
 
 module.exports = (knex, config) => {
+  const columnName = config.columnName || 'value';
+
   async function open () {
     return knex.schema.createTableIfNotExists(config.tableName, function (table) {
       table.increments();
-      table.jsonb('value');
+      table.jsonb(columnName);
       table.timestamps(true, true);
     }).then(() => {
       if (config._purgeLog) return knex(config.tableName).delete();
@@ -17,8 +19,10 @@ module.exports = (knex, config) => {
   }
 
   async function append (payload) {
+    const data = {};
+    data[columnName] = JSON.stringify(payload);
     return knex(config.tableName)
-      .insert({ value: JSON.stringify(payload) })
+      .insert(data)
       .returning('id')
       .then((inserted) => {
         return knex(config.tableName).first('id', 'created_at')
@@ -32,18 +36,20 @@ module.exports = (knex, config) => {
   }
 
   async function get (offset) {
-    return knex(config.tableName).first('id', 'value')
+    return knex(config.tableName).first('id', columnName)
       .where({ id: offset.id })
       .then((obj) => {
-        return JSON.parse(obj.value);
+        return JSON.parse(obj[columnName]);
       });
   }
 
   function createWriteStream () {
     const ws = stream.Writable({ objectMode: true });
     ws._write = (payload, enc, cb) => {
+      const data = {};
+      data[columnName] = JSON.stringify(payload);
       return knex(config.tableName)
-        .insert({ value: JSON.stringify(payload) })
+        .insert(data)
         .then(() => cb())
         .catch(cb);
     };
@@ -51,11 +57,11 @@ module.exports = (knex, config) => {
   }
 
   function createReadStream (opts = {}) {
-    return knex(config.tableName).select('id', 'value', 'created_at')
+    return knex(config.tableName).select('id', columnName, 'created_at')
       .where('id', '>=', (opts.offset && opts.offset.id) || 0)
       .stream()
       .pipe(streamMap({ objectMode: true }, (obj) => {
-        return { offset: { id: obj.id, timestamp: obj.created_at }, value: JSON.parse(obj.value) };
+        return { offset: { id: obj.id, timestamp: obj.created_at }, value: JSON.parse(obj[columnName]) };
       }));
   }
 
