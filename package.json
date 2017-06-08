@@ -29,7 +29,7 @@
     "through2-map": "^3.0.0"
   },
   "devDependencies": {
-    "abstract-log": "^3.0.3",
+    "abstract-log": "^3.0.4-0",
     "jsdoc-to-markdown": "~3.0.0",
     "nyc": "^10.1.2",
     "pg": "^6.2.3",
