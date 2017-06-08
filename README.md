@@ -9,7 +9,8 @@ Implementation of [abstract-log](github.com/eugeneware/abstract-log) using [knex
 ## Usage
 
 ```js
-  const knexLog = require('knex-log')({ knex: { /* knex config ...*/ }, tableName: 'tableName' });
+  const knex = {/* your knex instance */};
+  const knexLog = require('knex-log')(knex, { tableName: 'tableName' });
 ```
 Now use it like [abstract-log](github.com/eugeneware/abstract-log).
 
