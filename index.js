@@ -1,5 +1,6 @@
 const Knex = require('knex');
 const stream = require('stream');
+const streamMap = require('through2-map');
 
 // TODO(tim): Should send the timestamps through if they exist... i.e. created_at, updated_at
 
@@ -27,8 +28,12 @@ module.exports = (config) => {
       .then((result) => result[0]);
   }
 
-  async function get () {
-    return { msg: 'hello world' };
+  async function get (offset) {
+    return knex(config.tableName).select('id', 'value')
+      .first({ id: offset })
+      .then((obj) => {
+        return JSON.parse(obj.value);
+      });
   }
 
   function createWriteStream () {
@@ -43,21 +48,12 @@ module.exports = (config) => {
   }
 
   function createReadStream (opts = {}) {
-    const transform = new stream.Transform({
-      objectMode: true,
-      transform (chunk, encoding, cb) {
-        let value;
-        try {
-          value = JSON.parse(chunk.value);
-        } catch (e) {
-          return cb(e);
-        }
-        cb(null, { offset: chunk.id, value });
-      }
-    });
-    return knex(config.tableName).select('id', 'value').where('id', '>=', opts.offset || 0)
+    return knex(config.tableName).select('id', 'value')
+      .where('id', '>=', opts.offset || 0)
       .stream()
-      .pipe(transform);
+      .pipe(streamMap({ objectMode: true }, (obj) => {
+        return { offset: obj.id, value: JSON.parse(obj.value) };
+      }));
   }
 
   return {
