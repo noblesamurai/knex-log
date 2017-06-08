@@ -25,12 +25,20 @@ module.exports = (config) => {
     return knex(config.tableName)
       .insert({ value: JSON.stringify(payload) })
       .returning('id')
-      .then((result) => result[0]);
+      .then((inserted) => {
+        return knex(config.tableName).first('id', 'created_at')
+            // NOTE (tim): sqlite cannot do returning of multiple cols, so we
+            // have to requery to get the created_at.
+            .where({ id: inserted[0] })
+            .then((result) => {
+              return { id: result.id, timestamp: result.created_at };
+            });
+      });
   }
 
   async function get (offset) {
-    return knex(config.tableName).select('id', 'value')
-      .first({ id: offset })
+    return knex(config.tableName).first('id', 'value')
+      .where({ id: offset.id })
       .then((obj) => {
         return JSON.parse(obj.value);
       });
@@ -48,11 +56,11 @@ module.exports = (config) => {
   }
 
   function createReadStream (opts = {}) {
-    return knex(config.tableName).select('id', 'value')
-      .where('id', '>=', opts.offset || 0)
+    return knex(config.tableName).select('id', 'value', 'created_at')
+      .where('id', '>=', (opts.offset && opts.offset.id) || 0)
       .stream()
       .pipe(streamMap({ objectMode: true }, (obj) => {
-        return { offset: obj.id, value: JSON.parse(obj.value) };
+        return { offset: { id: obj.id, timestamp: obj.created_at }, value: JSON.parse(obj.value) };
       }));
   }
 
