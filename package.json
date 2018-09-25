@@ -1,14 +1,14 @@
 {
   "name": "knex-log",
   "description": "Implementation of a log using knex.",
-  "version": "1.0.0",
+  "version": "2.1.2",
   "author": "Tim Allen <tim@noblesamurai.com>",
   "license": "BSD",
   "main": "index.js",
   "scripts": {
     "coverage": "nyc -a -c -r html -r text npm test",
     "pretest": "semistandard --env mocha",
-    "test": "mocha --recursive test",
+    "test": "tape test/*.js",
     "watch": "mocha --recursive --watch test",
     "docs": "jsdoc2md index.js"
   },
@@ -21,17 +21,23 @@
     "url": "https://github.com/noblesamurai/knex-log/issues"
   },
   "engines": {
-    "node": "6.x",
-    "npm": "3.x"
+    "node": ">= 7.6",
+    "npm": "5.x"
   },
-  "dependencies": {},
+  "dependencies": {
+    "knex": "^0.13.0",
+    "through2-map": "^3.0.0"
+  },
   "devDependencies": {
-    "chai": "^3.5.0",
-    "dirty-chai": "^1.2.2",
-    "mocha": "~3.3.0",
+    "abstract-log": "^3.0.4-0",
+    "jsdoc-to-markdown": "~3.0.0",
     "nyc": "^10.1.2",
+    "pg": "^6.2.3",
+    "pg-query-stream": "^1.0.0",
     "semistandard": "*",
-    "jsdoc-to-markdown": "~3.0.0"
+    "sqlite3": "^3.1.8",
+    "tape": "^4.6.3",
+    "tape-promise": "^2.0.1"
   },
   "keywords": [],
   "nyc": {

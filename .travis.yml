@@ -1,5 +1,15 @@
 language: node_js
 before_install: "! grep PLEASE_FILL_IN_HERE README.md"
+before_script:
+    - psql -c 'create database travis_ci_test;' -U postgres
 node_js:
-  - '6'
   - '7'
+  - '8'
+env:
+  # HACK(tim): db urls for sqlite are broken, setting to '' will use the
+  # default settings for the test to run (sqlite) and still make an explit
+  # build for that case.
+  # https://github.com/tgriesser/knex/issues/2038
+  # https://docs.travis-ci.com/user/environment-variables/#Defining-Multiple-Variables-per-Item
+  - TEST_DATABASE_URL=''
+  - TEST_DATABASE_URL='postgres://localhost/travis_ci_test'
