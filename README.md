@@ -3,23 +3,20 @@
 > Implementation of a log using knex.
 
 ## Purpose
-- What problem does this module solve? At least a few sentences.
-PLEASE_FILL_IN_HERE
+
+Implementation of [abstract-log](github.com/eugeneware/abstract-log) using [knex](knexjs.org).
 
 ## Usage
 
 ```js
-// Several examples of usage.
-// Usually copying and pasting code from the tests and making the code standalone suffices.
-// PLEASE_FILL_IN_HERE
+  const knex = {/* your knex instance */};
+  const knexLog = require('knex-log')(knex, { tableName: 'tableName' });
 ```
+Now use it like [abstract-log](github.com/eugeneware/abstract-log).
 
 ## API
 
-PLEASE_FILL_IN_HERE
-
-Note: To regenerate this section from the jsdoc run `npm run docs` and paste
-the output above.
+cf [abstract-log](github.com/eugeneware/abstract-log).
 
 ## Installation
 

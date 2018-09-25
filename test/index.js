@@ -1,12 +1,26 @@
-const chai = require('chai');
-const dirtyChai = require('dirty-chai');
-const expect = chai.expect;
+const tape = require('tape');
+const it = require('tape-promise').default(tape);
+const knexLog = require('..');
+const test = require('abstract-log');
+const db = process.env.TEST_DATABASE_URL || {
+  client: 'sqlite3',
+  connection: {
+    filename: './mydb.sqlite'
+  }
+};
 
-chai.use(dirtyChai);
+let knex;
+const common = {
+  setup: async (t) => {
+    knex = require('knex')(db);
+    return knexLog(knex, {
+      tableName: 'logs',
+      _purgeLog: true
+    });
+  },
+  teardown: async (t, log) => {
+    return knex.destroy();
+  }
+};
 
-describe('my thing', function () {
-  it('should work', function () {
-    expect(true).to.be.true;
-    throw new Error('unimplemented');
-  });
-});
+test(it, common);
