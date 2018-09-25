@@ -26,12 +26,12 @@ module.exports = (knex, config) => {
       .returning('id')
       .then((inserted) => {
         return knex(config.tableName).first('id', 'created_at')
-            // NOTE (tim): sqlite cannot do returning of multiple cols, so we
-            // have to requery to get the created_at.
-            .where({ id: inserted[0] })
-            .then((result) => {
-              return { id: result.id, timestamp: result.created_at };
-            });
+        // NOTE (tim): sqlite cannot do returning of multiple cols, so we
+        // have to requery to get the created_at.
+          .where({ id: inserted[0] })
+          .then((result) => {
+            return { id: result.id, timestamp: result.created_at };
+          });
       });
   }
 
