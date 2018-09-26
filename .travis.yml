@@ -3,8 +3,8 @@ before_install: "! grep PLEASE_FILL_IN_HERE README.md"
 before_script:
     - psql -c 'create database travis_ci_test;' -U postgres
 node_js:
-  - '7'
   - '8'
+  - '10'
 env:
   # HACK(tim): db urls for sqlite are broken, setting to '' will use the
   # default settings for the test to run (sqlite) and still make an explit
