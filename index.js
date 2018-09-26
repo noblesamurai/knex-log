@@ -12,6 +12,10 @@ const streamMap = require('through2-map');
 module.exports = (knex, config) => {
   const columnName = config.columnName || 'value';
 
+  /**
+   * @async
+   * Prepare log for reading.
+   */
   async function open () {
     return knex.schema.createTableIfNotExists(config.tableName, function (table) {
       table.increments();
@@ -22,10 +26,18 @@ module.exports = (knex, config) => {
     });
   }
 
+  /**
+   * Call this when done.
+   */
   async function close () {
     return Promise.resolve();
   }
 
+  /**
+   * @async
+   * Append to the log.
+   * @param {object} payload
+   */
   async function append (payload) {
     const data = {};
     data[columnName] = JSON.stringify(payload);
@@ -43,6 +55,12 @@ module.exports = (knex, config) => {
       });
   }
 
+  /**
+   * @async
+   * get log at given offset
+   * @param {integer} offset
+   * @return {object} value
+   */
   async function get (offset) {
     return knex(config.tableName).first('id', columnName)
       .where({ id: offset.id })
@@ -53,6 +71,9 @@ module.exports = (knex, config) => {
       });
   }
 
+  /**
+   * Create a write stream that we can use to append to the log.
+   */
   function createWriteStream () {
     const ws = stream.Writable({ objectMode: true });
     ws._write = (payload, enc, cb) => {
@@ -66,6 +87,12 @@ module.exports = (knex, config) => {
     return ws;
   }
 
+  /**
+   * Create a read stream that we can use to read from the log.
+   * @params {object} opts
+   * @description
+   * - opts.offset.id - The id to read from
+   */
   function createReadStream (opts = {}) {
     return knex(config.tableName).select('id', columnName, 'created_at')
       .where('id', '>=', (opts.offset && opts.offset.id) || 0)

@@ -30,6 +30,58 @@ cf [abstract-log](github.com/eugeneware/abstract-log).
 | knex | <code>Knex</code> | knex instance to use, passed in... |
 | config | <code>object</code> |  |
 
+
+* [knex-log](#module_knex-log)
+    * [~open()](#module_knex-log..open)
+    * [~close()](#module_knex-log..close)
+    * [~append(payload)](#module_knex-log..append)
+    * [~get(offset)](#module_knex-log..get) ⇒ <code>object</code>
+    * [~createWriteStream()](#module_knex-log..createWriteStream)
+    * [~createReadStream()](#module_knex-log..createReadStream)
+
+<a name="module_knex-log..open"></a>
+
+### knex-log~open()
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+<a name="module_knex-log..close"></a>
+
+### knex-log~close()
+Call this when done.
+
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+<a name="module_knex-log..append"></a>
+
+### knex-log~append(payload)
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+
+| Param | Type |
+| --- | --- |
+| payload | <code>object</code> | 
+
+<a name="module_knex-log..get"></a>
+
+### knex-log~get(offset) ⇒ <code>object</code>
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+**Returns**: <code>object</code> - value  
+
+| Param | Type |
+| --- | --- |
+| offset | <code>integer</code> | 
+
+<a name="module_knex-log..createWriteStream"></a>
+
+### knex-log~createWriteStream()
+Create a write stream that we can use to append to the log.
+
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+<a name="module_knex-log..createReadStream"></a>
+
+### knex-log~createReadStream()
+- opts.offset.id - The id to read from
+
+**Kind**: inner method of [<code>knex-log</code>](#module_knex-log)  
+**Params**: <code>object</code> opts  
+
 ## Installation
 
 This module is installed via npm:
