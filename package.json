@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "abstract-log": "^3.0.4-0",
-    "jsdoc-to-markdown": "~3.0.0",
+    "jsdoc-to-markdown": "^4.0.1",
     "nyc": "^10.1.2",
     "pg": "^6.2.3",
     "pg-query-stream": "^1.0.0",
