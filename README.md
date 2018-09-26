@@ -18,6 +18,18 @@ Now use it like [abstract-log](github.com/eugeneware/abstract-log).
 
 cf [abstract-log](github.com/eugeneware/abstract-log).
 
+<a name="module_knex-log"></a>
+
+## knex-log
+- config.tableName - The table which logs are found in.
+- config.columnName - The column which logs are found in.
+
+
+| Param | Type | Description |
+| --- | --- | --- |
+| knex | <code>Knex</code> | knex instance to use, passed in... |
+| config | <code>object</code> |  |
+
 ## Installation
 
 This module is installed via npm:

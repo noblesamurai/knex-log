@@ -1,6 +1,14 @@
 const stream = require('stream');
 const streamMap = require('through2-map');
 
+/**
+ * @module knex-log
+ * @param {Knex} knex - knex instance to use, passed in...
+ * @param {object} config
+ * @description
+ * - config.tableName - The table which logs are found in.
+ * - config.columnName - The column which logs are found in.
+ */
 module.exports = (knex, config) => {
   const columnName = config.columnName || 'value';
 
