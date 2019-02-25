@@ -92,11 +92,14 @@ module.exports = (knex, config) => {
    * @params {object} opts
    * @description
    * - opts.offset.id - The id to read from
+   * - opts.highWaterMark - stream high water mark (default 16)
+   * - opts.batchSize - number of rows fetched at a time from postgres (default 100)
    */
   function createReadStream (opts = {}) {
+    const { offset, ...streamOpts } = opts;
     return knex(config.tableName).select('id', columnName, 'created_at')
-      .where('id', '>=', (opts.offset && opts.offset.id) || 0)
-      .stream()
+      .where('id', '>=', (offset && offset.id) || 0)
+      .stream(streamOpts)
       .pipe(streamMap({ objectMode: true }, (obj) => {
         let value = obj[columnName];
         if (typeof value === 'string') value = JSON.parse(value);
