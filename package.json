@@ -1,7 +1,7 @@
 {
   "name": "knex-log",
   "description": "Implementation of a log using knex.",
-  "version": "2.2.0-streamopts.0",
+  "version": "2.2.0",
   "author": "Tim Allen <tim@noblesamurai.com>",
   "license": "BSD",
   "main": "index.js",
