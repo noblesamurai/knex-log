@@ -5,6 +5,7 @@ before_script:
 node_js:
   - '8'
   - '10'
+  - '12'
 env:
   # HACK(tim): db urls for sqlite are broken, setting to '' will use the
   # default settings for the test to run (sqlite) and still make an explit
