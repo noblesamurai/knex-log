@@ -6,7 +6,7 @@
   "license": "BSD",
   "main": "index.js",
   "scripts": {
-    "coverage": "nyc -a -c -r html -r text npm test",
+    "coverage": "c8 npm test",
     "pretest": "semistandard --env mocha",
     "test": "tape test/*.js",
     "watch": "mocha --recursive --watch test",
@@ -25,6 +25,7 @@
     "npm": "6.x"
   },
   "dependencies": {
+    "c8": "^7.7.3",
     "through2-map": "^3.0.0"
   },
   "devDependencies": {
@@ -35,15 +36,24 @@
     "pg": "^6.2.3",
     "pg-query-stream": "^1.0.0",
     "semistandard": "^14.2.3",
-    "sqlite3": "^4.0.2",
+    "sqlite3": "^4.2.0",
     "tape": "^4.6.3",
     "tape-promise": "^2.0.1"
   },
   "keywords": [],
-  "nyc": {
+  "c8": {
+    "all": true,
+    "include": [
+      "index.js"
+    ],
     "exclude": [
-      "coverage",
-      "test"
+      ".github",
+      "node_modules",
+      "coverage"
+    ],
+    "reporter": [
+      "lcov",
+      "text"
     ]
   }
 }
